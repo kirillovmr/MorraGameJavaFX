@@ -1,111 +1,55 @@
 package server;
 
+import core.Logger;
+import core.MorraInfo;
+import elements.UI;
+import javafx.util.Pair;
+
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class Server
 {
-    int count = 1;
-    ArrayList<ClientThread> clients = new ArrayList<>();
-    TheServer server;
-    private Consumer<Serializable> callback;
+    protected int count = 1;
+    protected Logger logger;
+    private TheServer server;
+    protected Consumer<Serializable> callback;
+    protected ArrayList<ClientThread> clients;
+    protected ArrayList<Room> rooms;
 
-    public Server(Consumer<Serializable> call)
+    public Server(Logger logger, Consumer<Serializable> callback)
     {
-        callback = call;
-        server = new TheServer();
-        server.start();
+        this.clients = new ArrayList<>();
+        this.rooms = new ArrayList<>();
+
+        this.logger = logger;
+        this.callback = callback;
+        this.server = new TheServer(this);
     }
 
-
-    public class TheServer extends Thread
+    protected void matchWithPartner()
     {
-        public void run()
+        if (clients.size() >= 2)
         {
-            try(ServerSocket mySocket = new ServerSocket(5555))
-            {
-                System.out.println("Server is waiting for a client!");
-                while(true)
-                {
-                    ClientThread c = new ClientThread(mySocket.accept(), count);
-                    callback.accept("client has connected to server: " + "client #" + count);
-                    clients.add(c);
-                    c.start();
-
-                    count++;
-                }
-            }
-            catch(Exception e)
-            {
-                callback.accept("Server socket did not launch");
-            }
+            Room room = new Room(clients.remove(0), clients.remove(0));
+            rooms.add(room);
         }
     }
 
-    class ClientThread extends Thread
-    {
-        int count;
-        Socket connection;
-        ObjectInputStream in;
-        ObjectOutputStream out;
-
-        ClientThread(Socket s, int count)
-        {
-            this.connection = s;
-            this.count = count;
-        }
-
-        public void updateClients(String message)
-        {
-            for (ClientThread t : clients)
-            {
-                try
-                {
-                    t.out.writeObject(message);
-                }
-                catch (Exception ignored) { }
-            }
-        }
-
-        public void run()
-        {
-            try
-            {
-                in = new ObjectInputStream(connection.getInputStream());
-                out = new ObjectOutputStream(connection.getOutputStream());
-                connection.setTcpNoDelay(true);
-            }
-            catch(Exception e)
-            {
-                System.out.println("Streams not open");
-            }
-
-            updateClients("new client on server: client #"+count);
-
-            while(true)
-            {
-                try
-                {
-                    String data = in.readObject().toString();
-                    callback.accept("client: " + count + " sent: " + data);
-                    updateClients("client #"+count+" said: "+data);
-
-                }
-                catch(Exception e)
-                {
-                    callback.accept("OOOOPPs...Something wrong with the socket from client: " + count + "....closing down!");
-                    updateClients("Client #"+count+" has left the server!");
-                    clients.remove(this);
-                    break;
-                }
-            }
-        }
+    protected void updateUI() {
+        UI.updatePlayersConnected(this.clients.size() + this.rooms.size()*2);
+        UI.updatePlayersWaiting(this.clients.size());
     }
+
+    public TheServer getInstance() { return this.server; }
+
 }
 
 

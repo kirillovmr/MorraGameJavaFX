@@ -12,19 +12,30 @@ public class ConnectForm extends VBox
     private TextField ipField, portField;
     private Button connectBtn;
 
-    public ConnectForm()
+    public ConnectForm(String buttonText)
     {
         ipField = new TextField();
+        ipField.setText("127.0.0.1");
         ipField.setPromptText("127.0.0.1");
+        ipField.setDisable(!buttonText.equals("Connect"));
 
         portField = new TextField();
-        portField.setPromptText("3040");
+        portField.setText("5555");
+        portField.setPromptText("5555");
+
         HBox fieldBox = new HBox(ipField, portField);
 
-        connectBtn = new Button("Connect");
+        connectBtn = new Button(buttonText);
 
         this.getChildren().addAll(fieldBox, connectBtn);
     }
+
+    public String getIP()
+    {
+        return this.ipField.getText();
+    }
+
+    public int getPort() { return Integer.parseInt(this.portField.getText()); }
 
     public void setOnButtonPress(EventHandler<ActionEvent> e) {
         connectBtn.setOnAction(e);

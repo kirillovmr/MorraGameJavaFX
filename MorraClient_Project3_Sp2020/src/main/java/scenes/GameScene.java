@@ -13,7 +13,6 @@ import javafx.scene.text.Text;
 public class GameScene extends MyScene
 {
     private Text playerScore, opponentScore;
-    private GameLog gameLog;
 
     private Title titleText;
     private Text middleText, bottomText;

@@ -1,6 +1,7 @@
 package scenes;
 
 import elements.GameLog;
+import elements.UI;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -14,12 +15,13 @@ public class ActiveScene extends MyScene
 {
     private Text playersConnectedText, playersWaitingText;
     private Button stopBtn;
-    private GameLog gameLog;
 
     public ActiveScene()
     {
         playersConnectedText = new Text("Players connected: 0");
+        UI.setPlayersConnected(playersConnectedText);
         playersWaitingText = new Text("Players waiting: 0");
+        UI.setPlayersWaiting(playersWaitingText);
         stopBtn = new Button("Stop server");
 
         TilePane.setAlignment(playersConnectedText, Pos.CENTER_LEFT);

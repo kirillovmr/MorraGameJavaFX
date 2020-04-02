@@ -1,4 +1,6 @@
 import client.Client;
+import core.MorraInfo;
+import core.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,6 +18,7 @@ public class TheGameOfMorra extends Application
 	WaitingScene waitingScene;
 	GameScene gameScene;
 
+	Logger logger;
 	Client client;
 
 	public static void main(String[] args) {
@@ -28,14 +31,58 @@ public class TheGameOfMorra extends Application
 		primaryStage.setTitle("(Client2) Let's Play Morra!!!");
 		this.primaryStage = primaryStage;
 
+		// Creating Logger instance
+		this.logger = new Logger();
+
 		// Creating all required scenes
-		createScenes();
+		this.createScenes();
 
 		// Setting the initial scene
-		setScene(connectScene, false);
-		primaryStage.show();
+		this.setScene(this.connectScene, false);
+		this.primaryStage.show();
 
-		client = new Client(data-> Platform.runLater(()-> System.out.println("Data:" + data)));
+		// Creating a client
+		this.client = new Client(morraInfo ->
+		{
+			Platform.runLater(()->
+			{
+				System.out.println("Received:" + morraInfo.toString());
+			});
+		});
+	}
+
+	// Creates all the scenes needed by APP
+	private void createScenes()
+	{
+		this.connectScene = new ConnectScene();
+		this.logger.subscribe(this.connectScene.getGameLog());
+		this.connectScene.getConnectForm().setOnButtonPress(e ->
+		{
+			String ip = this.connectScene.getConnectForm().getIP();
+			int port = this.connectScene.getConnectForm().getPort();
+			if (this.client.connect(ip, port))
+			{
+				this.logger.add("Connected to " + ip + ":" + port);
+				this.setScene(this.waitingScene, true);
+				this.client.start();
+			}
+			else
+			{
+				this.logger.add("Unable to connect to " + ip + ":" + port);
+			}
+		});
+
+		this.waitingScene = new WaitingScene();
+		this.logger.subscribe(this.waitingScene.getGameLog());
+		this.waitingScene.setOnButtonPress(e ->
+		{
+			this.currentScene.interpolateBg(Color.web("#262626"), Color.LIGHTBLUE, 500);
+			MorraInfo morraInfo = new MorraInfo();
+			this.client.sendInfo(morraInfo);
+		});
+
+		this.gameScene = new GameScene();
+		this.logger.subscribe(this.gameScene.getGameLog());
 	}
 
 	// Sets the scene to the stage
@@ -45,37 +92,19 @@ public class TheGameOfMorra extends Application
 		{
 			FadeTransition ft = new FadeTransition();
 			ft.setDuration(Duration.millis(100));
-			ft.setNode(currentScene.stack);
+			ft.setNode(this.currentScene.stack);
 			ft.setFromValue(1);
 			ft.setToValue(0);
 			ft.setOnFinished(e -> {
-				currentScene = scene;
+				this.currentScene = scene;
 				this.primaryStage.setScene(scene.getScene());
 			});
 			ft.play();
 		}
 		else
 		{
-			currentScene = scene;
+			this.currentScene = scene;
 			this.primaryStage.setScene(scene.getScene());
 		}
-	}
-
-	// Creates all the scenes needed by APP
-	private void createScenes()
-	{
-		this.connectScene = new ConnectScene();
-		this.connectScene.connectForm.setOnButtonPress(e -> {
-			this.setScene(this.waitingScene, true);
-			this.client.start();
-		});
-
-		this.waitingScene = new WaitingScene();
-		this.waitingScene.setOnButtonPress(e -> {
-			this.currentScene.interpolateBg(Color.web("#262626"), Color.LIGHTBLUE, 500);
-			this.client.send("Lol");
-		});
-
-		this.gameScene = new GameScene();
 	}
 }

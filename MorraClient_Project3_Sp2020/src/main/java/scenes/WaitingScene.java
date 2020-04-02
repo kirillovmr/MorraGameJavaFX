@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 public class WaitingScene extends MyScene
 {
     private Button connectBtn;
-    private GameLog gameLog;
 
     public WaitingScene()
     {

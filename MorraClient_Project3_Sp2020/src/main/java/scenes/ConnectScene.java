@@ -17,13 +17,12 @@ import elements.ConnectForm;
 public class ConnectScene extends MyScene
 {
     public Title titleText;
-    public ConnectForm connectForm;
-    public GameLog gameLog;
+    private ConnectForm connectForm;
 
     public ConnectScene()
     {
         this.titleText = new Title();
-        this.connectForm = new ConnectForm();
+        this.connectForm = new ConnectForm("Connect");
         VBox root = new VBox(titleText, connectForm);
 
         gameLog = new GameLog();
@@ -31,4 +30,6 @@ public class ConnectScene extends MyScene
         scene = new Scene(stack, MyScene.width, MyScene.height);
         setBackground(Color.web("#262626"));
     }
+
+    public ConnectForm getConnectForm() { return this.connectForm; }
 }

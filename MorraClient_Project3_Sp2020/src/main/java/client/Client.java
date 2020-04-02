@@ -1,5 +1,7 @@
 package client;
 
+import core.MorraInfo;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,24 +22,48 @@ public class Client extends Thread
         callback = call;
     }
 
+    public boolean connect(String ip, int port) {
+        try {
+            socketClient = new Socket(ip, port);
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println("No connect");
+            return false;
+        }
+    }
+
     public void run()
     {
         try {
-            socketClient= new Socket("localhost",5555);
             out = new ObjectOutputStream(socketClient.getOutputStream());
             in = new ObjectInputStream(socketClient.getInputStream());
             socketClient.setTcpNoDelay(true);
             System.out.println("lol");
         }
-        catch(Exception e) {}
+        catch(Exception e) {
+            System.out.println("client ex");
+        }
 
         while(true)
         {
             try {
-                String message = in.readObject().toString();
-                callback.accept(message);
+                MorraInfo morraInfo = (MorraInfo) in.readObject();
+                callback.accept(morraInfo);
             }
-            catch(Exception e) {}
+            catch(Exception e) {
+                System.out.println("client read ex");
+            }
+        }
+    }
+
+    public void sendInfo(MorraInfo morraInfo)
+    {
+        try {
+            out.writeObject(morraInfo);
+        }
+        catch (IOException e)  {
+            e.printStackTrace();
         }
     }
 

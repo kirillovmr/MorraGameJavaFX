@@ -11,8 +11,7 @@ import javafx.scene.text.Text;
 public class StartScene extends MyScene
 {
     public Text titleText;
-    public ConnectForm connectForm;
-    public GameLog gameLog;
+    private ConnectForm connectForm;
 
     public StartScene()
     {
@@ -25,4 +24,6 @@ public class StartScene extends MyScene
         scene = new Scene(stack, MyScene.width, MyScene.height);
         setBackground(Color.web("#262626"));
     }
+
+    public ConnectForm getConnectForm() { return this.connectForm; }
 }

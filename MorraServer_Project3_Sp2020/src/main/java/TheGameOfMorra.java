@@ -1,3 +1,4 @@
+import core.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -19,6 +20,7 @@ public class TheGameOfMorra extends Application
 	StartScene startScene;
 	ActiveScene activeScene;
 
+	Logger logger;
 	Server server;
 
 	public static void main(String[] args) {
@@ -31,31 +33,66 @@ public class TheGameOfMorra extends Application
 		primaryStage.setTitle("(Server) Let's Play Morra!!!");
 		this.primaryStage = primaryStage;
 
+		// Creating Logger instance
+		this.logger = new Logger();
+
 		// Creating all required scenes
-		createScenes();
+		this.createScenes();
 
 		// Setting the initial scene
-		setScene(startScene);
-		primaryStage.show();
-	}
+		this.setScene(this.startScene);
+		this.primaryStage.show();
 
-	// Sets the scene to the stage
-	private void setScene(MyScene scene)
-	{
-		currentScene = scene;
-		this.primaryStage.setScene(scene.getScene());
+		// Creating a server
+		this.createServer();
 	}
 
 	// Creates all the scenes needed by APP
 	private void createScenes()
 	{
 		this.startScene = new StartScene();
-		this.startScene.connectForm.setOnButtonPress(e -> {
-			server = new Server(data -> Platform.runLater(() -> System.out.println("Data: " + data)));
-			this.setScene(this.activeScene);
+		this.logger.subscribe(this.startScene.getGameLog());
+		this.startScene.getConnectForm().setOnButtonPress(e ->
+		{
+			int port = this.startScene.getConnectForm().getPort();
+			if (this.server.getInstance().startServer(port)) {
+				this.logger.add("Server started at port " + port);
+				this.setScene(this.activeScene);
+				this.server.getInstance().start();
+			}
+			else
+			{
+				this.logger.add("Unable to start server at port " + port);
+			}
 		});
 
 		this.activeScene = new ActiveScene();
-		this.activeScene.setOnButtonPress(e -> this.setScene(this.startScene));
+		this.logger.subscribe(this.activeScene.getGameLog());
+		this.activeScene.setOnButtonPress(e ->
+		{
+			this.server.getInstance().stopServer();
+			this.createServer();
+			this.setScene(this.startScene);
+			this.logger.add("Server stopped");
+		});
+	}
+
+	// Creating a server instance
+	private void createServer()
+	{
+		this.server = new Server(this.logger, data ->
+		{
+			Platform.runLater(()->
+			{
+				System.out.println("Data:" + data);
+			});
+		});
+	}
+
+	// Sets the scene to the stage
+	private void setScene(MyScene scene)
+	{
+		this.currentScene = scene;
+		this.primaryStage.setScene(scene.getScene());
 	}
 }

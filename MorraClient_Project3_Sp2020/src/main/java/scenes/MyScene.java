@@ -1,5 +1,6 @@
 package scenes;
 
+import elements.GameLog;
 import javafx.animation.FillTransition;
 import javafx.animation.Interpolator;
 import javafx.geometry.Insets;
@@ -15,8 +16,9 @@ import javafx.util.Duration;
 public abstract class MyScene {
     protected Scene scene;
     public StackPane stack;
-
     public static double width = 640, height = 360;
+
+    protected GameLog gameLog;
 
     public void setBackground(Color color)
     {
@@ -48,4 +50,6 @@ public abstract class MyScene {
     public Scene getScene() {
         return scene;
     }
+
+    public GameLog getGameLog() { return gameLog; }
 }

@@ -22,6 +22,7 @@ public class Logger
         {
             logField.appendText(entry);
             logField.appendText("\n");
+            logField.setScrollTop(Double.MAX_VALUE);
         }
     }
 

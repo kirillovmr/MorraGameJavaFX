@@ -2,8 +2,6 @@ package elements;
 
 import javafx.scene.text.Text;
 
-import java.awt.*;
-
 public class UI {
     private static Text playersConnected = null;
     private static Text playersWaiting = null;

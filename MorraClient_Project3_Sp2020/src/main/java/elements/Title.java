@@ -9,8 +9,12 @@ public class Title extends VBox
 
     public Title()
     {
+        this.setId("titleVBox");
+
         topText = new Text("THE ANCIENT");
+        topText.setId("topText");
         bottomText = new Text("GAME OF MORRA");
+        bottomText.setId("bottomText");
         this.getChildren().addAll(topText, bottomText);
     }
 }

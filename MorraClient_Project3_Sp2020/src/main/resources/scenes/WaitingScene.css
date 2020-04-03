@@ -1,0 +1,42 @@
+/*
+    Main
+*/
+#stack {
+    -fx-padding: 10;
+}
+#rootVBox {
+    -fx-alignment: top-center;
+    -fx-spacing: 40;
+}
+
+/*
+    Title
+*/
+#titleVBox {
+    -fx-alignment: center;
+    -fx-padding: 30 0 0 0;
+    -fx-spacing: 5;
+}
+#topText {
+    -fx-fill: white;
+}
+#bottomText {
+    -fx-fill: white;
+}
+
+/*
+    Middle part
+*/
+#middleText {
+    -fx-fill: white;
+}
+
+/*
+    GameLog
+*/
+#gameLogTextArea {
+    -fx-text-fill: white;
+    -fx-control-inner-background: #454545;
+    -fx-border-color: black;
+    -fx-background-color: black;
+}

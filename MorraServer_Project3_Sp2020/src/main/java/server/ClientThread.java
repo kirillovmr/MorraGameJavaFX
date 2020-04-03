@@ -2,6 +2,7 @@ package server;
 
 import core.MorraInfo;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -36,13 +37,21 @@ class ClientThread extends Thread {
             System.out.println("Streams not open");
         }
 
+        // Sending clients' id to the client
+        try {
+            this.out.writeObject(this.id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         while(true) {
             try {
                 MorraInfo info = (MorraInfo) in.readObject();
                 this.server.callback.accept("client: " + id + " sent: " + info);
             }
             catch(Exception e) {
-                this.server.callback.accept("OOOOPPs...Something wrong with the socket from client: " + this.server.count + "....closing down!");
+                this.server.callback.accept("OOOOPPs...Something wrong with the socket from client: " + this.id + "....closing down!");
+                this.server.logger.add("Client #" + this.id + " disconnected");
                 this.server.clients.remove(this);
                 break;
             }

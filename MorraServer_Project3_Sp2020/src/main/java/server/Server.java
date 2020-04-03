@@ -40,6 +40,7 @@ public class Server
         {
             Room room = new Room(clients.remove(0), clients.remove(0));
             rooms.add(room);
+            this.logger.add("Room was created for clients #" + room.p1.id + "," + room.p2.id);
         }
     }
 

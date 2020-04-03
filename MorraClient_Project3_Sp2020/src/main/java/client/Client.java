@@ -39,7 +39,6 @@ public class Client extends Thread
             out = new ObjectOutputStream(socketClient.getOutputStream());
             in = new ObjectInputStream(socketClient.getInputStream());
             socketClient.setTcpNoDelay(true);
-            System.out.println("lol");
         }
         catch(Exception e) {
             System.out.println("client ex");
@@ -48,8 +47,8 @@ public class Client extends Thread
         while(true)
         {
             try {
-                MorraInfo morraInfo = (MorraInfo) in.readObject();
-                callback.accept(morraInfo);
+                Object data = in.readObject();
+                callback.accept((Serializable) data);
             }
             catch(Exception e) {
                 System.out.println("client read ex");

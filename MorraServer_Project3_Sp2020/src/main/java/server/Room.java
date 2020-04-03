@@ -17,7 +17,20 @@ public class Room {
 
         this.morraInfo = new MorraInfo();
         this.morraInfo.have2players = true;
-        this.broadcast();
+        this.morraInfo.p1ID = this.p1.id;
+        this.morraInfo.p2ID = this.p2.id;
+
+        this.morraInfo.p1Points = 13;
+        this.morraInfo.p2Points = 26;
+
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        broadcast();
+                    }
+                }, 2000
+        );
     }
 
     // Broadcast morraInfo to both players

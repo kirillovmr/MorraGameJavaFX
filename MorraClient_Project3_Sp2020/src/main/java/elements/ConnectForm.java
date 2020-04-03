@@ -14,18 +14,24 @@ public class ConnectForm extends VBox
 
     public ConnectForm(String buttonText)
     {
+        this.setId("connectFormVBox");
+
         ipField = new TextField();
+        ipField.setId("ipField");
         ipField.setText("127.0.0.1");
         ipField.setPromptText("127.0.0.1");
         ipField.setDisable(!buttonText.equals("Connect"));
 
         portField = new TextField();
+        portField.setId("portField");
         portField.setText("5555");
         portField.setPromptText("5555");
 
         HBox fieldBox = new HBox(ipField, portField);
+        fieldBox.setId("fieldBoxHBox");
 
         connectBtn = new Button(buttonText);
+        connectBtn.setId("connectBtn");
 
         this.getChildren().addAll(fieldBox, connectBtn);
     }

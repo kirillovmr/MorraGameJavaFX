@@ -13,24 +13,22 @@ import javafx.scene.text.Text;
 
 public class WaitingScene extends MyScene
 {
-    private Button connectBtn;
-
     public WaitingScene()
     {
         Title title = new Title();
 
-        Text middleText = new Text("Waiting for opponent");
+        Text middleText = new Text("Waiting for opponent...");
+        middleText.setId("middleText");
 
-        connectBtn = new Button("go back");
-        VBox root = new VBox(title, middleText, connectBtn);
+        VBox root = new VBox(title, middleText);
+        root.setId("rootVBox");
 
         gameLog = new GameLog();
         stack = new StackPane(gameLog, root);
+        stack.setId("stack");
         scene = new Scene(stack, MyScene.width, MyScene.height);
+        scene.getStylesheets().add("scenes/WaitingScene.css");
         setBackground(Color.web("#262626"));
     }
 
-    public void setOnButtonPress(EventHandler<ActionEvent> e) {
-        connectBtn.setOnAction(e);
-    }
 }

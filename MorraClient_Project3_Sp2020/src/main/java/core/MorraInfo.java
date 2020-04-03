@@ -5,11 +5,12 @@ import java.io.Serializable;
 public class MorraInfo implements Serializable
 {
     private static final long serialVersionUID = 5950169519310163575L;
-    int p1Points;
-    int p2Points;
-    String p1Plays;
-    String p2Plays;
-    boolean have2players;
+    public int p1ID, p2ID;
+    public int p1Points;
+    public int p2Points;
+    public String p1Plays;
+    public String p2Plays;
+    public boolean have2players;
 
     public MorraInfo() {
         this.p1Points = 0;
@@ -22,7 +23,9 @@ public class MorraInfo implements Serializable
     @Override
     public String toString() {
         return "MorraInfo{" +
-                "p1Points=" + p1Points +
+                "p1ID=" + p1ID +
+                ", p2ID=" + p2ID +
+                ", p1Points=" + p1Points +
                 ", p2Points=" + p2Points +
                 ", p1Plays='" + p1Plays + '\'' +
                 ", p2Plays='" + p2Plays + '\'' +

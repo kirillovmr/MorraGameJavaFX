@@ -1,6 +1,7 @@
 import client.Client;
 import core.MorraInfo;
 import core.Logger;
+import elements.UI;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 
 import javafx.util.Duration;
 import scenes.*;
+import scenes.ConnectScene;
 
 public class TheGameOfMorra extends Application
 {
@@ -20,6 +22,8 @@ public class TheGameOfMorra extends Application
 
 	Logger logger;
 	Client client;
+
+	int playerID = -1;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -38,17 +42,43 @@ public class TheGameOfMorra extends Application
 		this.createScenes();
 
 		// Setting the initial scene
-		this.setScene(this.connectScene, false);
+		this.setScene(this.gameScene, false);
 		this.primaryStage.show();
 
 		// Creating a client
-		this.client = new Client(morraInfo ->
-		{
-			Platform.runLater(()->
-			{
-				System.out.println("Received:" + morraInfo.toString());
-			});
-		});
+		this.client = new Client(data ->
+				Platform.runLater(()->
+				{
+					// If Morra info received
+					if (data instanceof MorraInfo) {
+						MorraInfo morraInfo = (MorraInfo) data;
+						System.out.println("Received:" + data.toString());
+
+						// If we are waiting for an opponent
+						if (currentScene.getClass().getName().equals(waitingScene.getClass().getName())) {
+							this.setScene(this.gameScene, true);
+							this.logger.add("Matched with a partner");
+
+							if (morraInfo.p1ID == this.playerID) {
+								UI.updatePlayerScore(morraInfo.p1Points);
+								UI.updateOpponentScore(morraInfo.p2Points);
+							}
+							else {
+								UI.updatePlayerScore(morraInfo.p2Points);
+								UI.updateOpponentScore(morraInfo.p1Points);
+							}
+						}
+						// If we are playing
+						else if (currentScene.getClass().getName().equals(gameScene.getClass().getName())) {
+
+						}
+					}
+					// If Integer received
+					else if (data instanceof Integer) {
+						this.playerID = (int) data;
+						System.out.println("ID received:" + this.playerID);
+					}
+				}));
 	}
 
 	// Creates all the scenes needed by APP
@@ -74,12 +104,6 @@ public class TheGameOfMorra extends Application
 
 		this.waitingScene = new WaitingScene();
 		this.logger.subscribe(this.waitingScene.getGameLog());
-		this.waitingScene.setOnButtonPress(e ->
-		{
-			this.currentScene.interpolateBg(Color.web("#262626"), Color.LIGHTBLUE, 500);
-			MorraInfo morraInfo = new MorraInfo();
-			this.client.sendInfo(morraInfo);
-		});
 
 		this.gameScene = new GameScene();
 		this.logger.subscribe(this.gameScene.getGameLog());

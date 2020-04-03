@@ -8,9 +8,12 @@ public class GameLog extends TextArea
 {
     public GameLog()
     {
-        this.setMaxWidth(400);
-        this.setMaxHeight(100);
+        this.setId("gameLogTextArea");
+        this.setMaxWidth(200);
+        this.setMaxHeight(60);
         this.setDisable(true);
+        this.setWrapText(true);
+
         StackPane.setAlignment(this, Pos.BOTTOM_LEFT);
     }
 }

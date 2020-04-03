@@ -48,6 +48,7 @@ class ClientThread extends Thread {
             try {
                 MorraInfo info = (MorraInfo) in.readObject();
                 this.server.callback.accept("client: " + id + " sent: " + info);
+                this.room.updatePlayerSelection(info);
             }
             catch(Exception e) {
                 this.server.callback.accept("OOOOPPs...Something wrong with the socket from client: " + this.id + "....closing down!");

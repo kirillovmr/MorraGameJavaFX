@@ -23,24 +23,37 @@ public class Room {
         this.morraInfo.p1Points = 13;
         this.morraInfo.p2Points = 26;
 
+        broadcast(this.morraInfo,2000);
+    }
+
+    public void updatePlayerSelection(MorraInfo morraInfoReceived) {
+        if (morraInfoReceived.p1Plays >= 0) {
+            this.morraInfo.p1Plays = morraInfoReceived.p1Plays;
+        }
+        if (morraInfoReceived.p2Plays >= 0) {
+            this.morraInfo.p2Plays = morraInfoReceived.p2Plays;
+        }
+        if (this.morraInfo.p1Plays >= 0 && this.morraInfo.p2Plays >= 0) {
+            broadcast(new MorraInfo(this.morraInfo), 2000);
+        }
+    }
+
+    // Broadcast morraInfo to both players
+    public void broadcast(MorraInfo morraInfo, int delay) {
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        broadcast();
+                        try {
+                            System.out.println("Sending: " + morraInfo.toString());
+                            p1.out.writeObject(morraInfo);
+                            p2.out.writeObject(morraInfo);
+                        }
+                        catch (IOException e) {
+                            System.out.println("Error broadcast room players " + p1.id + "," + p2.id);
+                        }
                     }
-                }, 2000
+                }, delay
         );
-    }
-
-    // Broadcast morraInfo to both players
-    public void broadcast() {
-        try {
-            p1.out.writeObject(morraInfo);
-            p2.out.writeObject(morraInfo);
-        }
-        catch (IOException e) {
-            System.out.println("Error broadcast room players " + p1.id + "," + p2.id);
-        }
     }
 }

@@ -1,7 +1,9 @@
 package scenes;
 
+import core.Logic;
 import elements.GameLog;
 import elements.Title;
+import elements.UI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -34,7 +36,24 @@ public class ConnectScene extends MyScene
         scene = new Scene(stack, MyScene.width, MyScene.height);
         scene.getStylesheets().add("scenes/ConnectScene.css");
         setBackground(Color.web("#262626"));
+
+        this.setConnectBtnHandler();
     }
 
-    public ConnectForm getConnectForm() { return this.connectForm; }
+    private void setConnectBtnHandler() {
+        this.connectForm.setOnButtonPress(e -> {
+            String ip = this.connectForm.getIP();
+            int port = this.connectForm.getPort();
+            if (Logic.client.connect(ip, port))
+            {
+                Logic.logger.add("Connected to " + ip + ":" + port);
+                UI.setScene(UI.waitingScene, true);
+                Logic.client.start();
+            }
+            else
+            {
+                Logic.logger.add("Unable to connect to " + ip + ":" + port);
+            }
+        });
+    }
 }

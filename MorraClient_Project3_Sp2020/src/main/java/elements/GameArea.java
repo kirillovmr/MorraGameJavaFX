@@ -1,5 +1,6 @@
 package elements;
 
+import core.MorraInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -8,13 +9,15 @@ import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.sql.Time;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class GameArea extends StackPane {
 
@@ -22,9 +25,11 @@ public class GameArea extends StackPane {
     ArrayList<ImageView> oppHands;
     Text vsText;
 
+    private Consumer<Integer> onPlayerSelect;
+
     Timeline randOppAnim;
-    int oppHandValue = -1;
-    boolean opponentReady = false;
+    int playerHandValue = -1;
+    int opponentHandValue = -1;
 
     public GameArea() {
         hands = new ArrayList<>();
@@ -42,27 +47,47 @@ public class GameArea extends StackPane {
         vsText.setOnMouseClicked(e -> {
             showOpponentHand(4);
         });
+    }
 
+    public void setOnPlayerSelect(Consumer<Integer> onPlayerSelect) {
+        this.onPlayerSelect = onPlayerSelect;
     }
 
     public void showOpponentHand(int handValue) {
-        oppHandValue = handValue;
-        if (randOppAnim != null) {
-            // Stop anim, show opp selection
-            showOppHandHelper();
-        }
-        else {
-            // Current player haven't made a selection yet
-            // Therefore helper will be called later by that animation
-            opponentReady = true;
-        }
-    }
-
-    private void showOppHandHelper() {
+        opponentHandValue = handValue;
         randOppAnim.stop();
         for (int i = 0; i < 5; i++) {
-            oppHands.get(i).setVisible(oppHandValue - 1 == i);
+            oppHands.get(i).setVisible(opponentHandValue - 1 == i);
         }
+        this.updateUI();
+    }
+
+    private void updateUI() {
+        int duration = 300;
+        Color colorFrom = Color.web("#262626");
+        Color colorTo;
+
+        if (this.playerHandValue > this.opponentHandValue) {
+            colorTo = Color.web("#73B53A");
+            UI.middleText.setText("YOU WIN");
+        }
+        else if (this.playerHandValue == this.opponentHandValue) {
+            colorTo = Color.web("#49ADC1");
+            UI.middleText.setText("DRAW");
+        }
+        else {
+            colorTo = Color.web("#EC3A24");
+            UI.middleText.setText("YOU LOSE");
+        }
+
+        UI.gameScene.interpolateBg(colorFrom, colorTo, duration, e -> {
+            Timeline t = new Timeline(new KeyFrame(Duration.millis(3000), e2 -> {
+                UI.gameScene.interpolateBg(colorTo, colorFrom, duration, e3 -> {
+                    UI.setScene(UI.finishScene, true);
+                });
+            }));
+            t.play();
+        });
     }
 
     private void createPlayerHands() {
@@ -73,6 +98,11 @@ public class GameArea extends StackPane {
 
             int finalI = i;
             hand.setOnMouseClicked(e -> {
+                playerHandValue = finalI;
+
+                // Accept a callback with a data of what we played
+                onPlayerSelect.accept(playerHandValue);
+
                 // Translating it to the left
                 TranslateTransition t = new TranslateTransition();
                 t.setDuration(Duration.millis(1000));
@@ -111,14 +141,6 @@ public class GameArea extends StackPane {
                 hand.setOnMouseClicked(e2 -> {
                     System.out.println("Finito");
                 });
-
-                // Showing opp hand if its ready
-//                if (opponentReady) {
-//                    Timeline showOpp = new Timeline(new KeyFrame(Duration.millis(3000), actionEvent -> {
-//                        showOppHandHelper();
-//                    }));
-//                    showOpp.play();
-//                }
             });
 
             // Translating hands

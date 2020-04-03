@@ -12,16 +12,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
-public class GameScene extends MyScene
+public class FinishScene extends MyScene
 {
     private Text playerScore, opponentScore;
 
     private Title titleText;
     private Text middleText, bottomText;
 
-    private GameArea gameArea;
 
-    public GameScene() {
+    public FinishScene() {
         playerScore = new Text("You: 0");
         playerScore.setId("playerScore");
         UI.setPlayerScore(playerScore);
@@ -42,11 +41,9 @@ public class GameScene extends MyScene
         VBox root = new VBox(titleText, middleText, new Text(), new Text(), bottomText);
         root.setId("rootVBox");
 
-        gameArea = new GameArea();
-        UI.gameArea = gameArea;
 
         gameLog = new GameLog();
-        stack = new StackPane(gameLog, playerScore, opponentScore, root, gameArea);
+        stack = new StackPane(gameLog, playerScore, opponentScore, root);
         stack.setId("stack");
         scene = new Scene(stack, MyScene.width, MyScene.height);
         scene.getStylesheets().add("scenes/GameScene.css");

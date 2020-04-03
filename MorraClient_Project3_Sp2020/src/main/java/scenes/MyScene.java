@@ -3,6 +3,8 @@ package scenes;
 import elements.GameLog;
 import javafx.animation.FillTransition;
 import javafx.animation.Interpolator;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
@@ -12,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
 
 public abstract class MyScene {
     protected Scene scene;
@@ -25,7 +28,7 @@ public abstract class MyScene {
         stack.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-    public void interpolateBg(Color fromColor, Color toColor, int duration)
+    public void interpolateBg(Color fromColor, Color toColor, int duration, EventHandler<ActionEvent> onFinish)
     {
         Rectangle rect = new Rectangle();
         rect.setFill(fromColor);
@@ -43,7 +46,7 @@ public abstract class MyScene {
                 return t;
             }
         });
-
+        tr.setOnFinished(onFinish);
         tr.play();
     }
 

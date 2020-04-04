@@ -1,5 +1,6 @@
 package server;
 
+import core.Logic;
 import core.MorraInfo;
 
 import java.io.IOException;
@@ -54,6 +55,13 @@ class ClientThread extends Thread {
                 this.server.callback.accept("OOOOPPs...Something wrong with the socket from client: " + this.id + "....closing down!");
                 this.server.logger.add("Client #" + this.id + " disconnected");
                 this.server.clients.remove(this);
+                for(Room r: this.server.rooms) {
+                    if (r.p1 == this) { r.p1 = null; }
+                    if (r.p2 == this) { r.p2 = null; }
+                }
+                // Checking rooms to be cleared
+                this.server.rooms.removeIf(r -> r.p1 == null && r.p2 == null);
+                Logic.server.updateUI();
                 break;
             }
         }

@@ -1,4 +1,5 @@
 import core.Logger;
+import core.Logic;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -87,6 +88,7 @@ public class TheGameOfMorra extends Application
 				System.out.println("Data:" + data);
 			});
 		});
+		Logic.server = this.server;
 	}
 
 	// Sets the scene to the stage

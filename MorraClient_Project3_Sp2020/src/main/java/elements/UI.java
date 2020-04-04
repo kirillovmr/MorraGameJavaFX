@@ -85,7 +85,7 @@ public class UI {
         UI.gameScene.middleText.setText("LET GAME BEGIN");
         UI.gameScene.bottomText.setVisible(true);
 
-        setScene(gameScene, false);
+        setScene(waitingScene, false);
     }
 
     public static void setScores(int playerScore, int opponentScore) {

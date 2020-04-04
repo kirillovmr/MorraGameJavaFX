@@ -43,6 +43,11 @@ public class Logic {
 
                         // If we are waiting for an opponent
                         if (UI.currentScene.getClass().getName().equals(WaitingScene.class.getName())) {
+                            if (morraInfo.p1ID == playerID) {
+                                UI.setScores(morraInfo.p1Points, morraInfo.p2Points);
+                            } else {
+                                UI.setScores(morraInfo.p2Points, morraInfo.p1Points);
+                            }
                             UI.setScene(UI.gameScene, false);
                             Logic.logger.add("Matched with a partner");
                         }
@@ -51,13 +56,22 @@ public class Logic {
                             if (morraInfo.p1ID == playerID) {
                                 UI.gameArea.showOpponentHand(morraInfo.p2Plays);
                                 UI.setScores(morraInfo.p1Points, morraInfo.p2Points);
-                            }
-                            else {
+                            } else {
                                 UI.gameArea.showOpponentHand(morraInfo.p1Plays);
                                 UI.setScores(morraInfo.p2Points, morraInfo.p1Points);
                             }
                         }
                     }
                 }));
+    }
+
+    public static void sendToServerPlayAgain(boolean value) {
+        if (morraInfo.p1ID == playerID) {
+            morraInfo.p1PlayAgain = value ? 1 : 0;
+        }
+        else {
+            morraInfo.p2PlayAgain = value ? 1 : 0;
+        }
+        Logic.client.sendInfo(morraInfo);
     }
 }

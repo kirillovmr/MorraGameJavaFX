@@ -1,0 +1,63 @@
+/*
+    Main
+*/
+#stack {
+    -fx-padding: 10;
+}
+#rootVBox {
+    -fx-alignment: top-center;
+    -fx-spacing: 30;
+}
+
+/*
+    Title
+*/
+#titleVBox {
+    -fx-alignment: center;
+    -fx-padding: 30 0 0 0;
+    -fx-spacing: 5;
+}
+#topText {
+    -fx-fill: white;
+}
+#bottomText {
+    -fx-fill: white;
+}
+
+/*
+    ConnectForm
+*/
+#connectFormVBox {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+    -fx-padding: 30 0 0 0;
+}
+#fieldBoxHBox {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+#ipField {
+    -fx-min-width: 120;
+    -fx-pref-width: 120;
+    -fx-max-width: 120;
+}
+#portField {
+    -fx-min-width: 60;
+    -fx-pref-width: 60;
+    -fx-max-width: 60;
+}
+#connectBtn {
+    -fx-min-width: 190;
+    -fx-pref-width: 190;
+    -fx-max-width: 190;
+}
+
+/*
+    GameLog
+*/
+#gameLogTextArea {
+    -fx-text-fill: white;
+    -fx-control-inner-background: #454545;
+    -fx-border-color: black;
+    -fx-background-color: black;
+}

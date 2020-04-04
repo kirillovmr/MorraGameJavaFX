@@ -19,24 +19,30 @@ public class ActiveScene extends MyScene
     public ActiveScene()
     {
         playersConnectedText = new Text("Players connected: 0");
+        playersConnectedText.setId("playersConnectedText");
         UI.setPlayersConnected(playersConnectedText);
         playersWaitingText = new Text("Players waiting: 0");
+        playersWaitingText.setId("playersWaitingText");
         UI.setPlayersWaiting(playersWaitingText);
         stopBtn = new Button("Stop server");
+        stopBtn.setId("stopBtn");
 
         TilePane.setAlignment(playersConnectedText, Pos.CENTER_LEFT);
         TilePane.setAlignment(stopBtn, Pos.CENTER_RIGHT);
 
         TilePane header = new TilePane();
-        header.setPrefTileWidth(MyScene.width/3 - 1);
+        header.setPrefTileWidth(MyScene.width/3 - 10);
         header.setPrefColumns(3);
         header.getChildren().addAll(playersConnectedText, playersWaitingText, stopBtn);
 
         VBox root = new VBox(header);
+        root.setId("rootVBox");
 
         gameLog = new GameLog();
         stack = new StackPane(gameLog, root);
+        stack.setId("stack");
         scene = new Scene(stack, MyScene.width, MyScene.height);
+        scene.getStylesheets().add("scenes/ActiveScene.css");
         setBackground(Color.web("#262626"));
     }
 

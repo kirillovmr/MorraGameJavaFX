@@ -1,6 +1,7 @@
 package server;
 
 import core.Logger;
+import core.Logic;
 import core.MorraInfo;
 import elements.UI;
 import javafx.util.Pair;
@@ -36,6 +37,9 @@ public class Server
 
     protected void matchWithPartner()
     {
+        // Checking rooms to be cleared
+        rooms.removeIf(r -> r.p1 == null && r.p2 == null);
+
         if (clients.size() >= 2)
         {
             Room room = new Room(clients.remove(0), clients.remove(0));
@@ -45,7 +49,12 @@ public class Server
     }
 
     protected void updateUI() {
-        UI.updatePlayersConnected(this.clients.size() + this.rooms.size()*2);
+        int totalInRooms = 0;
+        for (Room r: rooms) {
+            if (r.p1 != null) { totalInRooms += 1; }
+            if (r.p2 != null) { totalInRooms += 1; }
+        }
+        UI.updatePlayersConnected(this.clients.size() + totalInRooms);
         UI.updatePlayersWaiting(this.clients.size());
     }
 

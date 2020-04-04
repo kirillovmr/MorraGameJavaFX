@@ -1,5 +1,6 @@
 package scenes;
 
+import core.Logic;
 import elements.GameArea;
 import elements.GameLog;
 import elements.Title;
@@ -58,10 +59,12 @@ public class FinishScene extends MyScene
 
     private void setBtnHandlers() {
         playAgainBtn.setOnAction(e -> {
+            Logic.sendToServerPlayAgain(true);
             UI.gameToWaitingScene();
         });
 
         exitBtn.setOnAction(e -> {
+            Logic.sendToServerPlayAgain(false);
             System.exit(0);
         });
     }

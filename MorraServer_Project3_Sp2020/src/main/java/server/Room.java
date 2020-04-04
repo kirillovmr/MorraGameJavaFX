@@ -1,11 +1,12 @@
 package server;
 
+import core.Logic;
 import core.MorraInfo;
 import java.io.IOException;
 
 public class Room {
-    ClientThread p1;
-    ClientThread p2;
+    ClientThread p1, p2;
+
     MorraInfo morraInfo;
 
     public Room(ClientThread p1, ClientThread p2) {
@@ -32,17 +33,48 @@ public class Room {
         if (morraInfoReceived.p2Plays >= 0) {
             this.morraInfo.p2Plays = morraInfoReceived.p2Plays;
         }
+        if (morraInfoReceived.p1PlayAgain >= 0) {
+            this.morraInfo.p1PlayAgain = morraInfoReceived.p1PlayAgain;
+        }
+        if (morraInfoReceived.p2PlayAgain >= 0) {
+            this.morraInfo.p2PlayAgain = morraInfoReceived.p2PlayAgain;
+        }
         // If both players data is ready now
         if (this.morraInfo.p1Plays >= 0 && this.morraInfo.p2Plays >= 0) {
-            // Updating scores
-            if (this.morraInfo.p1Plays > this.morraInfo.p2Plays) {
-                this.morraInfo.p1Points += 1;
+
+            // If players want to play again (players FinishScene)
+            if (this.morraInfo.p1PlayAgain == 1 && this.morraInfo.p2PlayAgain == 1) {
+                this.morraInfo.p1Plays = this.morraInfo.p2Plays = -1;
+                this.morraInfo.p1PlayAgain = this.morraInfo.p2PlayAgain = -1;
+                System.out.println("Both play again");
+                this.broadcast(new MorraInfo(this.morraInfo), 1000);
             }
-            else if (this.morraInfo.p2Plays > this.morraInfo.p1Plays) {
-                this.morraInfo.p2Points += 1;
+            else if (this.morraInfo.p1PlayAgain == 1 && this.morraInfo.p2PlayAgain == 0) {
+                System.out.println("p1 plays, p2 not");
+                Logic.server.clients.add(this.p1);
+                Logic.server.rooms.remove(this);
+                Logic.server.matchWithPartner();
+                Logic.server.updateUI();
             }
-            // Sending data to clients
-            broadcast(new MorraInfo(this.morraInfo), 2000);
+            else if (this.morraInfo.p2PlayAgain == 1 && this.morraInfo.p1PlayAgain == 0) {
+                System.out.println("p2 plays, p1 not");
+                Logic.server.clients.add(this.p2);
+                Logic.server.rooms.remove(this);
+                Logic.server.matchWithPartner();
+                Logic.server.updateUI();
+            }
+            // If they are still playing
+            else if (this.morraInfo.p2PlayAgain == -1 && this.morraInfo.p1PlayAgain == -1) {
+                // Updating scores
+                if (this.morraInfo.p1Plays > this.morraInfo.p2Plays) {
+                    this.morraInfo.p1Points += 1;
+                }
+                else if (this.morraInfo.p2Plays > this.morraInfo.p1Plays) {
+                    this.morraInfo.p2Points += 1;
+                }
+                // Sending data to clients
+                broadcast(new MorraInfo(this.morraInfo), 2000);
+            }
         }
     }
 

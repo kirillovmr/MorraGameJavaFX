@@ -1,0 +1,33 @@
+/*
+    Main
+*/
+#stack {
+    -fx-padding: 10;
+}
+#rootVBox {
+    -fx-alignment: top-center;
+    -fx-spacing: 30;
+}
+
+/*
+    Top area
+*/
+#playersConnectedText {
+    -fx-fill: white;
+}
+#playersWaitingText {
+    -fx-fill: white;
+}
+#stopBtn {
+    -fx-fill: white;
+}
+
+/*
+    GameLog
+*/
+#gameLogTextArea {
+    -fx-text-fill: white;
+    -fx-control-inner-background: #454545;
+    -fx-border-color: black;
+    -fx-background-color: black;
+}

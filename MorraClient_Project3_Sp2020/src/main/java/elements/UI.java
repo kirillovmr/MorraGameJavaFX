@@ -8,23 +8,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import scenes.*;
 
+import java.util.function.Consumer;
+
 public class UI {
     private UI() { }
-
-    private static Text playerScore = null;
-    private static Text opponentScore = null;
-    public static void setPlayerScore(Text tf){
-        playerScore = tf;
-    }
-    public static void setOpponentScore(Text tf){
-        opponentScore = tf;
-    }
-    public static void updatePlayerScore(int num){
-        playerScore.setText("" + num);
-    }
-    public static void updateOpponentScore(int num){
-        opponentScore.setText("" + num);
-    }
 
     public static Text middleText = null;
     public static Text bottomText = null;
@@ -84,5 +71,27 @@ public class UI {
             currentScene = scene;
             primaryStage.setScene(scene.getScene());
         }
+    }
+
+    public static void gameToWaitingScene() {
+        // Recreating gameArea
+        Consumer<Integer> handler = UI.gameArea.getOnPlayerSelect();
+        UI.gameScene.stack.getChildren().remove(UI.gameArea);
+
+        UI.gameArea = new GameArea();
+        UI.gameArea.setOnPlayerSelect(handler);
+        UI.gameScene.stack.getChildren().add(UI.gameArea);
+
+        UI.gameScene.middleText.setText("LET GAME BEGIN");
+        UI.gameScene.bottomText.setVisible(true);
+
+        setScene(gameScene, false);
+    }
+
+    public static void setScores(int playerScore, int opponentScore) {
+        UI.gameScene.playerScore.setText("You: " + playerScore);
+        UI.gameScene.opponentScore.setText("Opp: " + opponentScore);
+        UI.finishScene.playerScore.setText("You: " + playerScore);
+        UI.finishScene.opponentScore.setText("Opp: " + opponentScore);
     }
 }

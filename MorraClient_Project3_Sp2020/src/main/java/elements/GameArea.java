@@ -42,16 +42,12 @@ public class GameArea extends StackPane {
         vsText.setId("vsText");
         vsText.setVisible(false);
         this.getChildren().add(vsText);
-
-        //TODO: remove later
-        vsText.setOnMouseClicked(e -> {
-            showOpponentHand(4);
-        });
     }
 
     public void setOnPlayerSelect(Consumer<Integer> onPlayerSelect) {
         this.onPlayerSelect = onPlayerSelect;
     }
+    public Consumer<Integer> getOnPlayerSelect() { return this.onPlayerSelect; }
 
     public void showOpponentHand(int handValue) {
         opponentHandValue = handValue;
@@ -83,7 +79,7 @@ public class GameArea extends StackPane {
         UI.gameScene.interpolateBg(colorFrom, colorTo, duration, e -> {
             Timeline t = new Timeline(new KeyFrame(Duration.millis(3000), e2 -> {
                 UI.gameScene.interpolateBg(colorTo, colorFrom, duration, e3 -> {
-                    UI.setScene(UI.finishScene, true);
+                    UI.setScene(UI.finishScene, false);
                 });
             }));
             t.play();
@@ -102,6 +98,8 @@ public class GameArea extends StackPane {
 
                 // Accept a callback with a data of what we played
                 onPlayerSelect.accept(playerHandValue);
+
+                UI.gameScene.bottomText.setVisible(false);
 
                 // Translating it to the left
                 TranslateTransition t = new TranslateTransition();

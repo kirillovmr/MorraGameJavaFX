@@ -25,6 +25,24 @@
 }
 
 /*
+    Buttons
+*/
+#buttonsVBox {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+#playAgainBtn {
+    -fx-min-width: 190;
+    -fx-pref-width: 190;
+    -fx-max-width: 190;
+}
+#exitBtn {
+    -fx-min-width: 190;
+    -fx-pref-width: 190;
+    -fx-max-width: 190;
+}
+
+/*
     Scores
 */
 #playerScore {

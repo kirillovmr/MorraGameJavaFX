@@ -20,20 +20,28 @@ public class Room {
         this.morraInfo.p1ID = this.p1.id;
         this.morraInfo.p2ID = this.p2.id;
 
-        this.morraInfo.p1Points = 13;
-        this.morraInfo.p2Points = 26;
-
         broadcast(this.morraInfo,2000);
     }
 
     public void updatePlayerSelection(MorraInfo morraInfoReceived) {
+        // If received data from player 1
         if (morraInfoReceived.p1Plays >= 0) {
             this.morraInfo.p1Plays = morraInfoReceived.p1Plays;
         }
+        // If received data from player 2
         if (morraInfoReceived.p2Plays >= 0) {
             this.morraInfo.p2Plays = morraInfoReceived.p2Plays;
         }
+        // If both players data is ready now
         if (this.morraInfo.p1Plays >= 0 && this.morraInfo.p2Plays >= 0) {
+            // Updating scores
+            if (this.morraInfo.p1Plays > this.morraInfo.p2Plays) {
+                this.morraInfo.p1Points += 1;
+            }
+            else if (this.morraInfo.p2Plays > this.morraInfo.p1Plays) {
+                this.morraInfo.p2Points += 1;
+            }
+            // Sending data to clients
             broadcast(new MorraInfo(this.morraInfo), 2000);
         }
     }

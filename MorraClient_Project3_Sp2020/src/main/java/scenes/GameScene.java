@@ -14,20 +14,16 @@ import javafx.scene.text.Text;
 
 public class GameScene extends MyScene
 {
-    private Text playerScore, opponentScore;
+    public Text playerScore, opponentScore;
 
     private Title titleText;
-    private Text middleText, bottomText;
-
-    private GameArea gameArea;
+    public Text middleText, bottomText;
 
     public GameScene() {
         playerScore = new Text("You: 0");
         playerScore.setId("playerScore");
-        UI.setPlayerScore(playerScore);
         opponentScore = new Text("Opp: 0");
         opponentScore.setId("opponentScore");
-        UI.setOpponentScore(opponentScore);
 
         StackPane.setAlignment(playerScore, Pos.TOP_LEFT);
         StackPane.setAlignment(opponentScore, Pos.TOP_RIGHT);
@@ -42,11 +38,10 @@ public class GameScene extends MyScene
         VBox root = new VBox(titleText, middleText, new Text(), new Text(), bottomText);
         root.setId("rootVBox");
 
-        gameArea = new GameArea();
-        UI.gameArea = gameArea;
+        UI.gameArea = new GameArea();
 
         gameLog = new GameLog();
-        stack = new StackPane(gameLog, playerScore, opponentScore, root, gameArea);
+        stack = new StackPane(gameLog, playerScore, opponentScore, root, UI.gameArea);
         stack.setId("stack");
         scene = new Scene(stack, MyScene.width, MyScene.height);
         scene.getStylesheets().add("scenes/GameScene.css");

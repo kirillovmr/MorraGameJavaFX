@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -34,6 +35,7 @@ public class ActiveScene extends MyScene
         header.setPrefTileWidth(MyScene.width/3 - 10);
         header.setPrefColumns(3);
         header.getChildren().addAll(playersConnectedText, playersWaitingText, stopBtn);
+
 
         VBox root = new VBox(header);
         root.setId("rootVBox");

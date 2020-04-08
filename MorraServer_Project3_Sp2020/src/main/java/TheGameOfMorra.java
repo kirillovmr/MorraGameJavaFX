@@ -1,5 +1,6 @@
 import core.Logger;
 import core.Logic;
+import elements.UI;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -68,6 +69,7 @@ public class TheGameOfMorra extends Application
 		});
 
 		this.activeScene = new ActiveScene();
+		UI.activeScene = this.activeScene;
 		this.logger.subscribe(this.activeScene.getGameLog());
 		this.activeScene.setOnButtonPress(e ->
 		{

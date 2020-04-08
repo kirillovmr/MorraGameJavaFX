@@ -88,6 +88,12 @@ public class UI {
         setScene(waitingScene, false);
     }
 
+    public static void gameToConnectScene() {
+        gameToWaitingScene();
+        Logic.createClient();
+        setScene(connectScene, false);
+    }
+
     public static void setScores(int playerScore, int opponentScore) {
         UI.gameScene.playerScore.setText("You: " + playerScore);
         UI.gameScene.opponentScore.setText("Opp: " + opponentScore);

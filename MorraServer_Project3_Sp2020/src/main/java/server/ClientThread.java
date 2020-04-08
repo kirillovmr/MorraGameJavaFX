@@ -2,6 +2,7 @@ package server;
 
 import core.Logic;
 import core.MorraInfo;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -53,7 +54,7 @@ class ClientThread extends Thread {
             }
             catch(Exception e) {
                 this.server.callback.accept("OOOOPPs...Something wrong with the socket from client: " + this.id + "....closing down!");
-                this.server.logger.add("Client #" + this.id + " disconnected");
+                Platform.runLater(() -> this.server.logger.add("Client #" + this.id + " disconnected"));
                 this.server.clients.remove(this);
                 for(Room r: this.server.rooms) {
                     if (r.p1 == this) { r.p1 = null; }

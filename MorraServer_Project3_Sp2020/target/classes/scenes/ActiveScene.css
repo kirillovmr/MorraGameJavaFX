@@ -26,8 +26,8 @@
     GameLog
 */
 #gameLogTextArea {
-    -fx-text-fill: white;
-    -fx-control-inner-background: #454545;
-    -fx-border-color: black;
-    -fx-background-color: black;
+    /*-fx-text-fill: white;*/
+    /*-fx-control-inner-background: #454545;*/
+    /*-fx-border-color: black;*/
+    /*-fx-background-color: black;*/
 }

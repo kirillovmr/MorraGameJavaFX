@@ -47,7 +47,7 @@ public class ConnectScene extends MyScene
             if (Logic.client.connect(ip, port))
             {
                 Logic.logger.add("Connected to " + ip + ":" + port);
-                UI.setScene(UI.waitingScene, true);
+                UI.setScene(UI.waitingScene, false);
                 Logic.client.start();
             }
             else

@@ -1,6 +1,8 @@
 package client;
 
 import core.MorraInfo;
+import elements.UI;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -52,8 +54,11 @@ public class Client extends Thread
             }
             catch(Exception e) {
                 System.out.println("client read ex");
+                break;
             }
         }
+
+        Platform.runLater(() -> UI.gameToConnectScene());
     }
 
     public void sendInfo(MorraInfo morraInfo)

@@ -1,6 +1,7 @@
 package server;
 
 import elements.UI;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -48,7 +49,9 @@ public class TheServer extends Thread {
             System.out.println("Server is waiting for a client!");
             while(true) {
                 ClientThread c = new ClientThread(mySocket.accept(), this.server.count, this.server);
-                this.server.logger.add("New client #" + this.server.count + " connected");
+
+                Platform.runLater(() -> this.server.logger.add("New client #" + this.server.count + " connected"));
+
                 this.server.callback.accept("client has connected to server: " + "client #" + this.server.count);
                 this.server.clients.add(c);
                 c.start();

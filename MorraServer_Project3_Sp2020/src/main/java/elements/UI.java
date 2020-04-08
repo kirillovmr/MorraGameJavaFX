@@ -1,6 +1,7 @@
 package elements;
 
 import javafx.scene.text.Text;
+import scenes.ActiveScene;
 
 public class UI {
     private static Text playersConnected = null;
@@ -21,4 +22,6 @@ public class UI {
     public static void updatePlayersWaiting(int num){
         playersWaiting.setText("Players waiting: " + num);
     }
+
+    public static ActiveScene activeScene;
 }

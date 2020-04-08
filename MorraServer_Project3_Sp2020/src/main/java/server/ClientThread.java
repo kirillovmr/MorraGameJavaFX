@@ -2,6 +2,7 @@ package server;
 
 import core.Logic;
 import core.MorraInfo;
+import elements.UI;
 import javafx.application.Platform;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ class ClientThread extends Thread {
             try {
                 MorraInfo info = (MorraInfo) in.readObject();
                 this.server.callback.accept("client: " + id + " sent: " + info);
-                this.room.updatePlayerSelection(info);
+                Platform.runLater(() -> this.room.updatePlayerSelection(info));
             }
             catch(Exception e) {
                 this.server.callback.accept("OOOOPPs...Something wrong with the socket from client: " + this.id + "....closing down!");
@@ -63,6 +64,9 @@ class ClientThread extends Thread {
                 // Checking rooms to be cleared
                 this.server.rooms.removeIf(r -> r.p1 == null && r.p2 == null);
                 Logic.server.updateUI();
+
+                UI.gameArea.deleteRoom(id);
+
                 break;
             }
         }

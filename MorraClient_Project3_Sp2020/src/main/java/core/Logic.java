@@ -26,11 +26,16 @@ public class Logic {
 
                         // When player chose what to play
                         UI.gameArea.setOnPlayerSelect(playerPlays -> {
+                            // Splitting string
+                            String[] parts = playerPlays.split(",");
+
                             // Setting up what player selected
                             if (morraInfo.p1ID == playerID) {
-                                morraInfo.p1Plays = playerPlays;
+                                morraInfo.p1Plays = Integer.parseInt(parts[0]);
+                                morraInfo.p1Guess = Integer.parseInt(parts[1]);
                             } else {
-                                morraInfo.p2Plays = playerPlays;
+                                morraInfo.p2Plays = Integer.parseInt(parts[0]);
+                                morraInfo.p2Guess = Integer.parseInt(parts[1]);
                             }
                             // Sending to server
                             Logic.client.sendInfo(morraInfo);
@@ -54,10 +59,10 @@ public class Logic {
                         // If we are playing
                         else if (UI.currentScene.getClass().getName().equals(GameScene.class.getName())) {
                             if (morraInfo.p1ID == playerID) {
-                                UI.gameArea.showOpponentHand(morraInfo.p2Plays);
+                                UI.gameArea.showOpponentHand(morraInfo.p2Plays, morraInfo.p2Guess);
                                 UI.setScores(morraInfo.p1Points, morraInfo.p2Points);
                             } else {
-                                UI.gameArea.showOpponentHand(morraInfo.p1Plays);
+                                UI.gameArea.showOpponentHand(morraInfo.p1Plays, morraInfo.p1Guess);
                                 UI.setScores(morraInfo.p2Points, morraInfo.p1Points);
                             }
                         }

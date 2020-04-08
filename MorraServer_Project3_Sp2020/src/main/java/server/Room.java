@@ -2,6 +2,8 @@ package server;
 
 import core.Logic;
 import core.MorraInfo;
+import elements.UI;
+
 import java.io.IOException;
 
 public class Room {
@@ -28,10 +30,14 @@ public class Room {
         // If received data from player 1
         if (morraInfoReceived.p1Plays >= 0) {
             this.morraInfo.p1Plays = morraInfoReceived.p1Plays;
+            this.morraInfo.p1Guess = morraInfoReceived.p1Guess;
+            UI.gameArea.showPlayerSelection(morraInfoReceived.p1ID, morraInfoReceived.p1Plays, morraInfoReceived.p1Guess);
         }
         // If received data from player 2
         if (morraInfoReceived.p2Plays >= 0) {
             this.morraInfo.p2Plays = morraInfoReceived.p2Plays;
+            this.morraInfo.p2Guess = morraInfoReceived.p2Guess;
+            UI.gameArea.showPlayerSelection(morraInfoReceived.p2ID, morraInfoReceived.p2Plays, morraInfoReceived.p2Guess);
         }
         if (morraInfoReceived.p1PlayAgain >= 0) {
             this.morraInfo.p1PlayAgain = morraInfoReceived.p1PlayAgain;
@@ -48,6 +54,7 @@ public class Room {
                 this.morraInfo.p1PlayAgain = this.morraInfo.p2PlayAgain = -1;
                 System.out.println("Both play again");
                 this.broadcast(new MorraInfo(this.morraInfo), 1000);
+                UI.gameArea.playAgain(this.morraInfo.p1ID);
             }
             else if (this.morraInfo.p1PlayAgain == 1 && this.morraInfo.p2PlayAgain == 0) {
                 System.out.println("p1 plays, p2 not");
@@ -66,10 +73,14 @@ public class Room {
             // If they are still playing
             else if (this.morraInfo.p2PlayAgain == -1 && this.morraInfo.p1PlayAgain == -1) {
                 // Updating scores
-                if (this.morraInfo.p1Plays > this.morraInfo.p2Plays) {
+                int totalHandValue = this.morraInfo.p1Plays + this.morraInfo.p2Plays;
+                if (this.morraInfo.p1Guess == totalHandValue && this.morraInfo.p2Guess == totalHandValue) {
+                    // Points are not awarded
+                }
+                else if (this.morraInfo.p1Guess == totalHandValue) {
                     this.morraInfo.p1Points += 1;
                 }
-                else if (this.morraInfo.p2Plays > this.morraInfo.p1Plays) {
+                else if (this.morraInfo.p2Guess == totalHandValue) {
                     this.morraInfo.p2Points += 1;
                 }
                 // Sending data to clients

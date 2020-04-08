@@ -9,6 +9,10 @@
     -fx-spacing: 30;
 }
 
+Text {
+    -fx-fill: white;
+}
+
 /*
     Top area
 */

@@ -8,6 +8,9 @@
     -fx-alignment: top-center;
     -fx-spacing: 40;
 }
+Text {
+    -fx-fill: white;
+}
 
 /*
     Title

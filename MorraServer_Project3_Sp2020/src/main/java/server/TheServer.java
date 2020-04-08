@@ -57,7 +57,7 @@ public class TheServer extends Thread {
                 c.start();
 
                 this.server.count++;
-                this.server.matchWithPartner();
+                Platform.runLater(() -> this.server.matchWithPartner());
 
                 this.server.updateUI();
             }

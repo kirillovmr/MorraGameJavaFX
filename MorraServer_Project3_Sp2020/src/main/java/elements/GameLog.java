@@ -10,7 +10,7 @@ public class GameLog extends ListView<String>
     public GameLog()
     {
         this.setId("gameLogTextArea");
-        this.setMaxWidth(300);
+//        this.setMaxWidth(300);
         this.setMaxHeight(100);
         this.setDisable(true);
 

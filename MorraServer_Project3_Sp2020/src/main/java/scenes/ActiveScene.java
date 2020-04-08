@@ -1,5 +1,6 @@
 package scenes;
 
+import elements.GameArea;
 import elements.GameLog;
 import elements.UI;
 import javafx.event.ActionEvent;
@@ -16,6 +17,8 @@ public class ActiveScene extends MyScene
 {
     private Text playersConnectedText, playersWaitingText;
     private Button stopBtn;
+
+    private GameArea gameArea;
 
     public ActiveScene()
     {
@@ -36,8 +39,10 @@ public class ActiveScene extends MyScene
         header.setPrefColumns(3);
         header.getChildren().addAll(playersConnectedText, playersWaitingText, stopBtn);
 
+        gameArea = new GameArea();
+        UI.gameArea = gameArea;
 
-        VBox root = new VBox(header);
+        VBox root = new VBox(header, gameArea);
         root.setId("rootVBox");
 
         gameLog = new GameLog();

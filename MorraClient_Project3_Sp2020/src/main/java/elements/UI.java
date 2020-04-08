@@ -75,7 +75,7 @@ public class UI {
 
     public static void gameToWaitingScene() {
         // Recreating gameArea
-        Consumer<Integer> handler = UI.gameArea.getOnPlayerSelect();
+        Consumer<String> handler = UI.gameArea.getOnPlayerSelect();
         UI.gameScene.stack.getChildren().remove(UI.gameArea);
 
         UI.gameArea = new GameArea();

@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -23,20 +24,30 @@ public class GameArea extends StackPane {
 
     ArrayList<ImageView> hands;
     ArrayList<ImageView> oppHands;
+    ArrayList<Text> totalGuessTexts;
+    Text opponentGuessText;
     Text vsText;
 
-    private Consumer<Integer> onPlayerSelect;
+    private Consumer<String> onPlayerSelect;
 
     Timeline randOppAnim;
     int playerHandValue = -1;
     int opponentHandValue = -1;
+    int playerGuess = -1;
+    int opponentGuess = -1;
 
     public GameArea() {
         hands = new ArrayList<>();
         oppHands = new ArrayList<>();
+        totalGuessTexts = new ArrayList<>();
 
         createPlayerHands();
         createOpponentHands();
+
+        opponentGuessText = new Text("?");
+        opponentGuessText.setVisible(false);
+        this.getChildren().add(opponentGuessText);
+        translate(opponentGuessText, 50, null);
 
         vsText = new Text("VS");
         vsText.setId("vsText");
@@ -44,17 +55,19 @@ public class GameArea extends StackPane {
         this.getChildren().add(vsText);
     }
 
-    public void setOnPlayerSelect(Consumer<Integer> onPlayerSelect) {
+    public void setOnPlayerSelect(Consumer<String> onPlayerSelect) {
         this.onPlayerSelect = onPlayerSelect;
     }
-    public Consumer<Integer> getOnPlayerSelect() { return this.onPlayerSelect; }
+    public Consumer<String> getOnPlayerSelect() { return this.onPlayerSelect; }
 
-    public void showOpponentHand(int handValue) {
+    public void showOpponentHand(int handValue, int oppGuess) {
         opponentHandValue = handValue;
+        opponentGuess = oppGuess;
         randOppAnim.stop();
         for (int i = 0; i < 5; i++) {
             oppHands.get(i).setVisible(opponentHandValue - 1 == i);
         }
+        opponentGuessText.setText("" + opponentGuess);
         this.updateUI();
     }
 
@@ -63,13 +76,15 @@ public class GameArea extends StackPane {
         Color colorFrom = Color.web("#262626");
         Color colorTo;
 
-        if (this.playerHandValue > this.opponentHandValue) {
-            colorTo = Color.web("#73B53A");
-            UI.middleText.setText("YOU WIN");
-        }
-        else if (this.playerHandValue == this.opponentHandValue) {
+        int totalHandValue = playerHandValue + opponentHandValue;
+
+        if (this.playerGuess == totalHandValue && this.opponentGuess == totalHandValue) {
             colorTo = Color.web("#49ADC1");
             UI.middleText.setText("DRAW");
+        }
+        else if (this.playerGuess == totalHandValue) {
+            colorTo = Color.web("#73B53A");
+            UI.middleText.setText("YOU WIN");
         }
         else {
             colorTo = Color.web("#EC3A24");
@@ -77,7 +92,7 @@ public class GameArea extends StackPane {
         }
 
         UI.gameScene.interpolateBg(colorFrom, colorTo, duration, e -> {
-            Timeline t = new Timeline(new KeyFrame(Duration.millis(3000), e2 -> {
+            Timeline t = new Timeline(new KeyFrame(Duration.millis(5000), e2 -> {
                 UI.gameScene.interpolateBg(colorTo, colorFrom, duration, e3 -> {
                     UI.setScene(UI.finishScene, false);
                 });
@@ -86,30 +101,34 @@ public class GameArea extends StackPane {
         });
     }
 
-    private void createPlayerHands() {
-        for (int i=1; i<=5; i++) {
-            ImageView hand = createImageView("hand"+i+".png", 0.2);
-            hands.add(hand);
-            this.getChildren().add(hand);
+    private void createGuessText() {
+        for (int i=0; i<5; i++) {
+            int guessNumber = playerHandValue + 1 + i;
+            Text text = new Text("" + guessNumber);
+            totalGuessTexts.add(text);
+
+            UI.updateMiddleText("MAKE A TOTAL GUESS");
 
             int finalI = i;
-            hand.setOnMouseClicked(e -> {
-                playerHandValue = finalI;
+            text.setOnMouseClicked(e -> {
+                System.out.println("Clicked: " + guessNumber);
+                playerGuess = guessNumber;
 
-                // Accept a callback with a data of what we played
-                onPlayerSelect.accept(playerHandValue);
+                for (int j=0; j<totalGuessTexts.size(); j++) {
+                    Text t = totalGuessTexts.get(j);
 
-                UI.gameScene.bottomText.setVisible(false);
+                    t.setOnMouseClicked(null);
+                    t.setVisible(j == finalI);
+                }
 
-                // Translating it to the left
-                TranslateTransition t = new TranslateTransition();
-                t.setDuration(Duration.millis(1000));
-                t.setNode(hand);
-                t.setByX( (finalI-1) * -100 + 100);
-                t.setOnFinished(ignored -> {
+                translate(text, -finalI * 50, onFinish -> {
                     // Update Middle text
                     UI.updateMiddleText("WAITING FOR OPPONENT...");
                     vsText.setVisible(true);
+                    opponentGuessText.setVisible(true);
+
+                    // Accept a callback with a data of what we played
+                    onPlayerSelect.accept("" + playerHandValue + "," + playerGuess);
 
                     // Randomize opp hands
                     randOppAnim = new Timeline(new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
@@ -126,6 +145,34 @@ public class GameArea extends StackPane {
                     randOppAnim.setCycleCount(Timeline.INDEFINITE);
                     randOppAnim.play();
                 });
+            });
+
+            this.getChildren().add(text);
+
+            translate(text, -(1 - i) * 50, null);
+        }
+    }
+
+    private void createPlayerHands() {
+        for (int i=1; i<=5; i++) {
+            ImageView hand = createImageView("hand"+i+".png", 0.2);
+            hands.add(hand);
+            this.getChildren().add(hand);
+
+            int finalI = i;
+            hand.setOnMouseClicked(e -> {
+                playerHandValue = finalI;
+
+                UI.gameScene.bottomText.setVisible(false);
+
+                // Translating it to the left
+                TranslateTransition t = new TranslateTransition();
+                t.setDuration(Duration.millis(1000));
+                t.setNode(hand);
+                t.setByX( (finalI-1) * -100 + 100);
+                t.setOnFinished(ignored -> {
+                    createGuessText();
+                });
                 t.play();
 
                 // Disabling all other hands
@@ -136,17 +183,11 @@ public class GameArea extends StackPane {
                 }
 
                 // Disabling on click event
-                hand.setOnMouseClicked(e2 -> {
-                    System.out.println("Finito");
-                });
+                hand.setOnMouseClicked(null);
             });
 
             // Translating hands
-            TranslateTransition t = new TranslateTransition();
-            t.setDuration(Duration.millis(1000));
-            t.setNode(hand);
-            t.setByX( -(3 - i) * 100 );
-            t.play();
+            translate(hand, -(3 - i) * 100, null);
         }
     }
 
@@ -158,12 +199,17 @@ public class GameArea extends StackPane {
             this.getChildren().add(hand);
 
             // Translating hands
-            TranslateTransition t = new TranslateTransition();
-            t.setDuration(Duration.millis(1000));
-            t.setNode(hand);
-            t.setByX( 100 );
-            t.play();
+            translate(hand, 100, null);
         }
+    }
+
+    private void translate(Node node, double translation, EventHandler<ActionEvent> onFinish) {
+        TranslateTransition t = new TranslateTransition();
+        t.setDuration(Duration.millis(1000));
+        t.setNode(node);
+        t.setByX( translation );
+        t.setOnFinished(onFinish);
+        t.play();
     }
 
     // Returns ImageView for given filename

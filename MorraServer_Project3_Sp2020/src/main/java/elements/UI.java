@@ -24,4 +24,6 @@ public class UI {
     }
 
     public static ActiveScene activeScene;
+
+    public static GameArea gameArea;
 }

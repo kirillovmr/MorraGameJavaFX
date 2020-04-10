@@ -1,5 +1,6 @@
 package client;
 
+import core.Logic;
 import core.MorraInfo;
 import elements.UI;
 import javafx.application.Platform;
@@ -19,9 +20,9 @@ public class Client extends Thread
 
     private Consumer<Serializable> callback;
 
-    public Client(Consumer<Serializable> call)
+    public Client(Consumer<Serializable> callback)
     {
-        callback = call;
+        this.callback = callback;
     }
 
     public boolean connect(String ip, int port) {
@@ -58,7 +59,10 @@ public class Client extends Thread
             }
         }
 
-        Platform.runLater(() -> UI.gameToConnectScene());
+        Platform.runLater(() -> {
+            Logic.logger.add("Disconnected from server");
+            UI.gameToConnectScene();
+        });
     }
 
     public void sendInfo(MorraInfo morraInfo)

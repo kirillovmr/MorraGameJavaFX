@@ -4,12 +4,10 @@ import elements.GameArea;
 import elements.GameLog;
 import elements.Title;
 import elements.UI;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 public class GameScene extends MyScene
@@ -32,8 +30,9 @@ public class GameScene extends MyScene
         middleText = new Text("LET GAME BEGIN");
         middleText.setId("middleText");
         UI.setMiddleText(middleText);
-        bottomText = new Text("TAKE YOUR PICK");
+        bottomText = new Text("");
         bottomText.setId("bottomText");
+        bottomText.setVisible(false);
         UI.setBottomText(bottomText);
         VBox root = new VBox(titleText, middleText, new Text(), new Text(), bottomText);
         root.setId("rootVBox");

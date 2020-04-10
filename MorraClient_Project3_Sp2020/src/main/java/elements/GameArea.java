@@ -1,6 +1,5 @@
 package elements;
 
-import core.MorraInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -16,7 +15,6 @@ import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -170,9 +168,7 @@ public class GameArea extends StackPane {
                 t.setDuration(Duration.millis(1000));
                 t.setNode(hand);
                 t.setByX( (finalI-1) * -100 + 100);
-                t.setOnFinished(ignored -> {
-                    createGuessText();
-                });
+                t.setOnFinished(ignored -> createGuessText());
                 t.play();
 
                 // Disabling all other hands

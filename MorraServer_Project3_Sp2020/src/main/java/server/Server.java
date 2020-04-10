@@ -1,19 +1,11 @@
 package server;
 
 import core.Logger;
-import core.Logic;
-import core.MorraInfo;
 import elements.UI;
-import javafx.util.Pair;
+import javafx.application.Platform;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class Server
@@ -43,9 +35,9 @@ public class Server
         if (clients.size() >= 2)
         {
             Room room = new Room(clients.remove(0), clients.remove(0));
-            UI.gameArea.addRoom(room.p1.id, room.p2.id);
             rooms.add(room);
-            this.logger.add("Room was created for clients #" + room.p1.id + "," + room.p2.id);
+            Platform.runLater(() ->UI.gameArea.addRoom(room.p1.id, room.p2.id));
+            Platform.runLater(() -> this.logger.add("Room was created for clients #" + room.p1.id + "," + room.p2.id));
         }
     }
 

@@ -18,6 +18,7 @@ Text {
 */
 #playersConnectedText {
     -fx-fill: white;
+    -fx-padding: 0 0 0 10;
 }
 #playersWaitingText {
     -fx-fill: white;

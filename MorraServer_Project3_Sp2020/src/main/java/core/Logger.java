@@ -3,7 +3,6 @@ package core;
 import elements.GameLog;
 import javafx.application.Platform;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Logger
@@ -31,10 +30,6 @@ public class Logger
                         }
                     }, 100
             );
-//            logField.scrollTo(Integer.MAX_VALUE);
-//            logField.appendText(entry);
-//            logField.appendText("\n");
-//            logField.setScrollTop(Double.MAX_VALUE);
         }
     }
 
@@ -44,8 +39,6 @@ public class Logger
         for(String entry: entries)
         {
             gameLog.getItems().add(entry);
-//            gameLog.appendText(entry);
-//            gameLog.appendText("\n");
         }
         gameLog.scrollTo(Integer.MAX_VALUE);
     }

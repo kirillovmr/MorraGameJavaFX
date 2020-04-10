@@ -1,6 +1,5 @@
 package server;
 
-import elements.UI;
 import javafx.application.Platform;
 
 import java.io.IOException;
@@ -57,8 +56,7 @@ public class TheServer extends Thread {
                 c.start();
 
                 this.server.count++;
-                Platform.runLater(() -> this.server.matchWithPartner());
-
+                this.server.matchWithPartner();
                 this.server.updateUI();
             }
         }

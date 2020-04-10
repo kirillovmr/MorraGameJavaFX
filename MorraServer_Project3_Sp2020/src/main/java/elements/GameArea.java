@@ -85,6 +85,19 @@ public class GameArea extends VBox {
         }
     }
 
+    public void setPoints(int playerID, int playerPoints) {
+        for (RoomArea roomArea: roomAreas) {
+            if (roomArea.p1ID == playerID || roomArea.p2ID == playerID) {
+                if (roomArea.p1ID == playerID) {
+                    roomArea.p1Points.setText("    P:" + playerPoints);
+                }
+                else {
+                    roomArea.p2Points.setText("P:" + playerPoints + "    ");
+                }
+            }
+        }
+    }
+
     public void playAgain(int playerID) {
         for (RoomArea roomArea: roomAreas) {
             if (roomArea.p1ID == playerID || roomArea.p2ID == playerID) {
@@ -98,6 +111,7 @@ public class GameArea extends VBox {
 
         int p1ID, p2ID;
         Text p1IdText, p2IdText;
+        Text p1Points, p2Points;
         Text p1Number, p2Number;
         ArrayList<ImageView> p1Images, p2Images;
 
@@ -126,6 +140,12 @@ public class GameArea extends VBox {
             StackPane.setAlignment(p1IdText, Pos.TOP_LEFT);
             StackPane.setAlignment(p2IdText, Pos.TOP_RIGHT);
 
+            // Setting points
+            p1Points = new Text("    P:0");
+            p2Points = new Text("P:0    ");
+            StackPane.setAlignment(p1Points, Pos.BOTTOM_LEFT);
+            StackPane.setAlignment(p2Points, Pos.BOTTOM_RIGHT);
+
             // Hand images
             p1Images = new ArrayList<>();
             p2Images = new ArrayList<>();
@@ -143,7 +163,7 @@ public class GameArea extends VBox {
             // VS text
             Text vsText = new Text("VS");
 
-            stack.getChildren().addAll(p1IdText, p2IdText, p1Number, p2Number, vsText);
+            stack.getChildren().addAll(p1IdText, p2IdText, p1Points, p2Points, p1Number, p2Number, vsText);
         }
 
         private void stopAnim(boolean player1) {

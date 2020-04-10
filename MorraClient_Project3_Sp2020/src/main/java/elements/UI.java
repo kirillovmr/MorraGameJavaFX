@@ -2,7 +2,6 @@ package elements;
 
 import core.Logic;
 import javafx.animation.FadeTransition;
-import javafx.scene.Scene;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;

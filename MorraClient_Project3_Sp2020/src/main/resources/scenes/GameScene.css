@@ -6,7 +6,7 @@
 }
 #rootVBox {
     -fx-alignment: top-center;
-    -fx-spacing: 40;
+    -fx-spacing: 30;
 }
 Text {
     -fx-fill: white;
@@ -51,8 +51,8 @@ Text {
     GameLog
 */
 #gameLogTextArea {
-    -fx-text-fill: white;
-    -fx-control-inner-background: #454545;
-    -fx-border-color: black;
-    -fx-background-color: black;
+    /*-fx-text-fill: white;*/
+    /*-fx-control-inner-background: #454545;*/
+    /*-fx-border-color: black;*/
+    /*-fx-background-color: black;*/
 }

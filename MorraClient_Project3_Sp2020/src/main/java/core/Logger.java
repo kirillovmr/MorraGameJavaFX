@@ -1,6 +1,7 @@
 package core;
 
 import elements.GameLog;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 
@@ -20,8 +21,15 @@ public class Logger
         entries.add(entry);
         for(GameLog logField: logFields)
         {
-            logField.appendText(entry);
-            logField.appendText("\n");
+            logField.getItems().add(entry);
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(() -> logField.scrollTo(Integer.MAX_VALUE));
+                        }
+                    }, 100
+            );
         }
     }
 
@@ -30,8 +38,8 @@ public class Logger
         logFields.add(gameLog);
         for(String entry: entries)
         {
-            gameLog.appendText(entry);
-            gameLog.appendText("\n");
+            gameLog.getItems().add(entry);
         }
+        gameLog.scrollTo(Integer.MAX_VALUE);
     }
 }

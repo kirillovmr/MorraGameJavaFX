@@ -1,14 +1,9 @@
 import core.Logger;
 import core.Logic;
 import elements.UI;
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import scenes.ActiveScene;
 import scenes.MyScene;
 import scenes.StartScene;

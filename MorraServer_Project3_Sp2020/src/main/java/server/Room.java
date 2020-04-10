@@ -83,6 +83,8 @@ public class Room {
                 else if (this.morraInfo.p2Guess == totalHandValue) {
                     this.morraInfo.p2Points += 1;
                 }
+                UI.gameArea.setPoints(this.morraInfo.p1ID, this.morraInfo.p1Points);
+                UI.gameArea.setPoints(this.morraInfo.p2ID, this.morraInfo.p2Points);
                 // Sending data to clients
                 broadcast(new MorraInfo(this.morraInfo), 2000);
             }
